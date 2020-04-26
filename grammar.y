@@ -52,12 +52,18 @@ node_t make_node(node_nature nature, int nops, ...);
 %nonassoc TOK_ELSE
 
 %right TOK_AFFECT
+%left TOK_OR
+%left TOK_AND
+%left TOK_BOR
+%left TOK_BXOR
+%left TOK_BAND
 %left TOK_EQ TOK_NE
 %left TOK_GT TOK_LT TOK_GE TOK_LE
 
+
 %left TOK_PLUS TOK_MINUS
 %left TOK_MUL TOK_DIV TOK_MOD
-%left TOK_UMINUS
+%left TOK_UMINUS TOK_NOT TOK_BNOT
 
 %type <intval> TOK_INTVAL
 %type <strval> TOK_IDENT TOK_STRING

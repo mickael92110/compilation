@@ -55,6 +55,10 @@ ESPACE          [ \t\n]
                 printf("TOK_AFFECT\n");
                 return TOK_AFFECT;
 }
+"==" {
+                printf("TOK_EQ\n");
+                return TOK_EQ;
+}
 
 ";" {
                 printf("TOK_SEMICOL\n");
@@ -95,8 +99,23 @@ ESPACE          [ \t\n]
                 printf("TOK_LT\n");
                 return TOK_LT;
 }
-
-"GT" {
+">" {
+                printf("TOK_GT\n");
+                return TOK_GT;
+}
+"<=" {
+                printf("TOK_LE\n");
+                return TOK_LE;
+}
+">=" {
+                printf("TOK_GE\n");
+                return TOK_GE;
+}
+"!=" {
+                printf("TOK_NE\n");
+                return TOK_NE;
+}
+"go to" {
                 printf("TOK_GT\n");
                 return TOK_GT;
 }
@@ -155,6 +174,38 @@ ESPACE          [ \t\n]
 "while" {
                 printf("TOK_WHILE\n");
                 return TOK_WHILE;
+}
+"!" {
+                printf("TOK_NOT\n");
+                return TOK_NOT;
+}
+
+"~" {
+                printf("TOK_BNOT\n");
+                return TOK_BNOT;
+}
+
+"&" {
+                printf("TOK_BAND\n");
+                return TOK_BAND;
+}
+
+"|" {
+                printf("TOK_BOR\n");
+                return TOK_BOR;
+}
+"&&" {
+                printf("TOK_AND\n");
+                return TOK_AND;
+}
+"||" {
+                printf("TOK_OR\n");
+                return TOK_OR;
+}
+
+"do" {
+                printf("TOK_DO\n");
+                return TOK_DO;
 }
 
 {IDF} {
