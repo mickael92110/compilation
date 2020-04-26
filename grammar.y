@@ -52,7 +52,6 @@ node_t make_node(node_nature nature, int nops, ...);
 %nonassoc TOK_ELSE
 
 %right TOK_AFFECT
-
 %left TOK_OR
 %left TOK_AND
 %left TOK_BOR
@@ -61,6 +60,7 @@ node_t make_node(node_nature nature, int nops, ...);
 %left TOK_EQ TOK_NE
 %left TOK_GT TOK_LT TOK_GE TOK_LE
 %left TOK_SRL TOK_SRA TOK_SLL
+
 
 %left TOK_PLUS TOK_MINUS
 %left TOK_MUL TOK_DIV TOK_MOD
