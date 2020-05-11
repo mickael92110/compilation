@@ -52,7 +52,6 @@ node_t make_node(node_nature nature, int nops, ...);
 %nonassoc TOK_ELSE
 
 %right TOK_AFFECT
-
 %left TOK_OR
 %left TOK_AND
 %left TOK_BOR
@@ -62,6 +61,7 @@ node_t make_node(node_nature nature, int nops, ...);
 %left TOK_GT TOK_LT TOK_GE TOK_LE
 %left TOK_SRL TOK_SRA TOK_SLL
 
+
 %left TOK_PLUS TOK_MINUS
 %left TOK_MUL TOK_DIV TOK_MOD
 %left TOK_UMINUS TOK_NOT TOK_BNOT
@@ -69,14 +69,14 @@ node_t make_node(node_nature nature, int nops, ...);
 %type <intval> TOK_INTVAL
 %type <strval> TOK_IDENT TOK_STRING
 
-%type <ptr> program listdecl listdeclnonnull vardecl ident type listtypedecl decl maindecl
-%type <ptr> listinst listinstnonnull inst block expr listparamprint paramprint
+%type <ptr> program vardecls listdecls decls listdecl decl type maindecl
+%type <ptr> listinst inst listinstnonnull block expr listparamprint paramprint ident
 
 
 %%
 
 /* Regles ici */
-program         : listdeclnonnull maindecl
+program         : vardecls maindecl
                 {
                     $$ = make_node(NODE_PROGRAM, 2, $1, $2);
                     *program_root = $$;
@@ -88,56 +88,79 @@ program         : listdeclnonnull maindecl
                 }
                 ;
 
-listdecl        : listdeclnonnull
+vardecls        : listdecls
+		{
+                    $$ = $1;
+                }
+                ;
+
+listdecls       : decls
+		{
+		    $$ = $1;
+		}
+                | listdecls TOK_COMMA decls
+		{
+                    $$ = make_node(NODE_LIST,2, $1,$3);
+                }
+                ;
+
+decls            : type listdecl
                 {
-                  $$ = NULL; }
-                |
-                { $$ = NULL; }
+                  printf("node_decl \n");
+                    $$ = make_node(NODE_DECL,2, $1,$2);
+                }
                 ;
 
-listdeclnonnull : vardecl
-                | listdeclnonnull vardecl
-                 { $$ = NULL; }
+listdecl        : decl
+		{
+		    $$ = $1;
+		}
+                | listdecl TOK_COMMA decl
+		{
+                    $$ = make_node(NODE_LIST,2, $1,$3);
+                }
                 ;
-
-vardecl         : type listtypedecl TOK_SEMICOL
+decl            : ident
+		{
+		    $$ = $1;
+		}
+                | ident TOK_AFFECT expr
+                {
+                  printf("node_decl \n");
+                    $$ = make_node(NODE_DECL,2, $1,$3);
+                }
                 ;
 
 type            : TOK_INT
                 {
                   printf("node_type int \n");
-                  $$ = NULL;
+                    $$ = make_node(NODE_TYPE,0);
                 }
                 | TOK_BOOL
-                { $$ = NULL; }
+                {   $$ = make_node(NODE_TYPE,0);
+		}
                 | TOK_VOID
                 {
                   printf("node_type void \n");
-                  $$ = NULL;
+                    $$ = make_node(NODE_TYPE,0);
                 }
                 ;
 
-listtypedecl    : decl
-                | listtypedecl TOK_COMMA decl
-                ;
 
-decl            : ident
-                | ident TOK_AFFECT expr
-                {
-                  printf("node_decl \n");
-                  $$ = NULL;
-                }
-                ;
+
+
+
 
 maindecl        : type ident TOK_LPAR TOK_RPAR block
                 {
                   printf("node_maindecl main \n");
-                  $$ = NULL;
+                    $$ = make_node(NODE_FUNC,2,$1,$2,$5);
                 }
                 ;
 
+
 listinst        : listinstnonnull
-                { $$ = NULL; }
+                {   $$ = $1; }
                 |
                 { $$ = NULL; }
                 ;
@@ -149,102 +172,104 @@ listinstnonnull : inst
 inst            : expr TOK_SEMICOL
                 {
                   printf("node_inst inst \n");
-                  $$ = NULL;
+                  $$ = $1;
                 }
                 | TOK_IF TOK_LPAR expr TOK_RPAR inst TOK_ELSE inst
-                { $$ = NULL; }
+                { $$ = make_node(NODE_IF,3,$3,$5,$7); }
                 | TOK_IF TOK_LPAR expr TOK_RPAR inst %prec TOK_THEN
-                { $$ = NULL; }
+                { $$ = make_node(NODE_IF,2,$3,$5); }
                 | TOK_WHILE TOK_LPAR expr TOK_RPAR inst
-                { $$ = NULL; }
+                { $$ = make_node(NODE_WHILE,2,$3,$5); }
                 | TOK_FOR TOK_LPAR expr TOK_SEMICOL expr TOK_SEMICOL expr TOK_RPAR inst
-                { $$ = NULL; }
+                { $$ = make_node(NODE_FOR,4,$3,$5,$7,$9); }
                 | TOK_DO inst TOK_WHILE TOK_LPAR expr TOK_RPAR TOK_SEMICOL
-                { $$ = NULL; }
+                { $$ = make_node(NODE_DOWHILE,2,$2,$5); }
                 | block
-                { $$ = NULL; }
-                | TOK_SEMICOL
-                { $$ = NULL; }
+                { $$ = $1; }
+                /*| TOK_SEMICOL
+                { $$ = $1; }*/
                 | TOK_PRINT TOK_LPAR listparamprint TOK_RPAR TOK_SEMICOL
-                { $$ = NULL; }
+                { $$ = make_node(NODE_PRINT,1,$3); }
                 ;
 
 block           : TOK_LACC listdecl listinst TOK_RACC
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BLOCK,2,$2,$3); }
                 ;
 
 expr            : expr TOK_MUL expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_MUL,2,$1,$3); }
                 |expr TOK_DIV expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_DIV,2,$1,$3); }
                 |expr TOK_PLUS expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_PLUS,2,$1,$3); }
                 |expr TOK_MINUS expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_MINUS,2,$1,$3); }
                 |expr TOK_MOD expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_MOD,2,$1,$3); }
                 |expr TOK_LT expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_LT,2,$1,$3); }
                 |expr TOK_GT expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_GT,2,$1,$3); }
                 |TOK_MINUS expr %prec TOK_UMINUS
                 { $$ = NULL; }
                 |expr TOK_GE expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_GE,2,$1,$3); }
                 |expr TOK_LE expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_LE,2,$1,$3); }
                 |expr TOK_EQ expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_EQ,2,$1,$3); }
                 |expr TOK_NE expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_NE,2,$1,$3); }
                 |expr TOK_AND expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_AND,2,$1,$3); }
                 |expr TOK_OR expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_OR,2,$1,$3); }
                 |expr TOK_BAND expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BAND,2,$1,$3); }
                 |expr TOK_BOR expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BOR,2,$1,$3); }
                 |expr TOK_BXOR expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BXOR,2,$1,$3); }
                 |expr TOK_SRL expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_SRL,2,$1,$3); }
                 |expr TOK_SRA expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_SRA,2,$1,$3); }
                 |expr TOK_SLL expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_SLL,2,$1,$3); }
                 |TOK_NOT expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_NOT,1,$2); }
                 |TOK_BNOT expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BNOT,1,$2); }
                 |TOK_LPAR expr TOK_RPAR
                 { $$ = NULL; }
                 |ident TOK_AFFECT expr
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BNOT,2,$1,$3); }
                 |TOK_INTVAL
-                { $$ = NULL; }
+                { $$ = make_node(NODE_INTVAL,1,$1); }
                 |TOK_TRUE
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BOOLVAL,0); }
                 |TOK_FALSE
-                { $$ = NULL; }
+                { $$ = make_node(NODE_BOOLVAL,0); }
+		|TOK_STRING
+                { $$ = make_node(NODE_STRINGVAL,0); }
                 |ident
-                { $$ = NULL; }
+                { $$ = $1; }
                 ;
 
 listparamprint  : listparamprint TOK_COMMA paramprint
-                { $$ = NULL; }
+                { $$ = make_node(NODE_LIST,2, $1,$3); }
                 | paramprint
-                { $$ = NULL; }
+                { $$ = $1; }
                 ;
 
 paramprint      : ident
-                { $$ = NULL; }
+                { $$ = $1; }
                 | TOK_STRING
-                { $$ = NULL; }
+                { $$ = make_node(NODE_STRINGVAL,0); }
                 ;
 
 ident           : TOK_IDENT
-                { $$ = NULL; }
+                { $$ = make_node(NODE_IDENT,0); }
                 ;
 %%
 
