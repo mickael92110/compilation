@@ -251,7 +251,7 @@ ident           : TOK_IDENT
 /* A completer et/ou remplacer avec d'autres fonctions */
 node_t make_node(node_nature nature, int nops, ...) {
     va_list ap;
-
+    node_t n;
     return NULL;
 }
 

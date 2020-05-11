@@ -261,9 +261,7 @@ int main(int argc, char ** argv) {
 
     yyin = fopen(infile, "r");
     yyparse(&program_root);
-    //for(int i = 0; i < 70; i = i + 1)yylex();
     fclose(yyin);
-    //analyse_tree(program_root);
     yylex_destroy();
     return 0;
 }
