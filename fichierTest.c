@@ -1,5 +1,7 @@
 int start = 0;
 int end = 100;
+bool b = true;
+//char* stri = "henri";
 
 void main () {
   int i , s = start , e = end ;
