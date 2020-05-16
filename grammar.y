@@ -388,12 +388,15 @@ node_t make_node(node_nature nature, int nops, ...);
 /* Regles ici */
 program         : listdeclnonnull maindecl
                 {
+                    printf("ou la ?\n");
                     $$ = make_node(NODE_PROGRAM, 2, $1, $2);
                     *program_root = $$;
                 }
                 | maindecl
                 {
+                    printf("ici\n");
                     $$ = make_node(NODE_PROGRAM, 2, NULL, $1);
+                    //$$ = make_node(NODE_PROGRAM, 1, $1);
                     *program_root = $$;
                 }
                 ;
@@ -648,7 +651,39 @@ node_t make_node(node_nature nature, int nops, ...) {
     // On initialise la structure a retourner
     n = malloc(sizeof(node_s));
 
+
+
     switch (nature){
+
+      case NODE_PROGRAM:
+            //n->opr = malloc(sizeof(node_t));
+
+            // va_arg(ap, int);
+            // n2 = va_arg(ap, node_t);
+            // if(n2 == NULL)printf("n2 est null\n");
+            // printf("test : %s\n",node_nature2string(n2->nature));
+            n->opr = malloc(sizeof(node_t)*nops);
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = 0;
+            n->stack_size = 0;
+            n->nops = nops;
+            //n->opr = NULL;
+            n->decl_node = NULL;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+
+            printf("node : %s\n",node_nature2string(n->nature));
+            break;
 
       case NODE_TYPE:
             n->nature = nature;
@@ -658,7 +693,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = 0;
             n->stack_size = 0;
-            n->nops = 0;
+            n->nops = nops;
             n->opr = NULL;
             n->decl_node = NULL;
             n->ident = NULL;
@@ -675,7 +710,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = 0;
             n->stack_size = 0;
-            n->nops = 0;
+            n->nops = nops;
             n->opr = 0;
             n->decl_node = 0;
             n->ident = va_arg(ap, char*);
@@ -692,7 +727,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = 0;
             n->stack_size = 0;
-            n->nops = 0;
+            n->nops = nops;
             n->opr = 0;
             n->decl_node = 0;
             n->ident = NULL;
@@ -709,7 +744,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = 0;
             n->stack_size = 0;
-            n->nops = 0;
+            n->nops = nops;
             n->opr = 0;
             n->decl_node = 0;
             n->ident = NULL;
@@ -718,9 +753,38 @@ node_t make_node(node_nature nature, int nops, ...) {
             printf("node BOOLVAL : %d\n", (int)(n->value));
             break;
 
-        default:
-            printf("%s\n",node_nature2string(nature));
+      case NODE_FUNC:
+            n->opr = malloc(sizeof(node_t)*nops);
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = 0;
+            n->stack_size = 0;
+            n->nops = nops;
+            //n->opr = 0;
+            n->decl_node = 0;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+
+            printf("node FUNC opr[0] type : %s\n", node_type2string(n->opr[0]->type));
+            printf("node FUNC opr[1] ident : %s\n", n->opr[1]->ident);
+
             break;
+
+      //Faire node block 
+
+
+      default:
+          printf("%s\n",node_nature2string(nature));
+          break;
     }
     va_end(ap);
     return n;

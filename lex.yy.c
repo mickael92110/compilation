@@ -2231,7 +2231,7 @@ int main(int argc, char ** argv) {
     yyin = fopen(infile, "r");
     yyparse(&program_root);
     fclose(yyin);
-    //dump_tree(program_root, "testy");
+    dump_tree(program_root, "testy");
     //analyse_tree(program_root);
     yylex_destroy();
     return 0;
