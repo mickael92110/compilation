@@ -388,13 +388,13 @@ node_t make_node(node_nature nature, int nops, ...);
 /* Regles ici */
 program         : listdeclnonnull maindecl
                 {
-                    printf("ou la ?\n");
+
                     $$ = make_node(NODE_PROGRAM, 2, $1, $2);
                     *program_root = $$;
                 }
                 | maindecl
                 {
-                    printf("ici\n");
+
                     $$ = make_node(NODE_PROGRAM, 2, NULL, $1);
                     //$$ = make_node(NODE_PROGRAM, 1, $1);
                     *program_root = $$;
@@ -412,12 +412,14 @@ listdeclnonnull : vardecl
                   $$ = $1;
                 }
                 | listdeclnonnull vardecl
-                 { $$ = make_node(NODE_LIST,2, $1,$2); }
+                {
+                  $$ = make_node(NODE_LIST,2, $1,$2);
+                }
                 ;
 
 vardecl         : type listtypedecl TOK_SEMICOL
                 {
-                  $$ = make_node(NODE_LIST,2, $1,$2);
+                  $$ = make_node(NODE_DECLS,2, $1,$2);
                 }
                 ;
 
@@ -437,11 +439,11 @@ type            : TOK_INT
 
 listtypedecl    : decl
                 {
-                  $$ = make_node(NODE_LIST,1, $1);
+                  $$ = $1;
                 }
                 | listtypedecl TOK_COMMA decl
                 {
-                  $$ = make_node(NODE_LIST,2, $1,$3);
+                  $$ = make_node(NODE_LIST, 2, $1, $3);
                 }
                 ;
 
@@ -678,7 +680,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = 0;
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = nops;
             //n->opr = NULL;
@@ -691,7 +693,7 @@ node_t make_node(node_nature nature, int nops, ...) {
               n->opr[i] = va_arg(ap, node_t);
             }
 
-            printf("node : %s\n",node_nature2string(n->nature));
+            printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
             break;
 
       case NODE_TYPE:
@@ -700,7 +702,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = 0;
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = 0;
             n->opr = NULL;
@@ -708,7 +710,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->ident = NULL;
             n->str = NULL;
             n->node_num = 0;
-            printf("node TYPE : %s\n",node_type2string(n->type));
+            printf("node : %s   ligne : %d\n",node_type2string(n->type), yylineno);
             break;
 
       case NODE_IDENT:
@@ -720,7 +722,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = 0;
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = 0;
             n->opr = 0;
@@ -728,7 +730,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->ident = va_arg(ap, char*);
             n->str = NULL;
             n->node_num = 0;
-            printf("node IDENT : %s\n", n->ident);
+            printf("node IDENT : %s   ligne : %d\n", n->ident, yylineno);
             break;
 
       case NODE_INTVAL:
@@ -737,7 +739,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = va_arg(ap, int);
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = nops;
             n->opr = 0;
@@ -745,7 +747,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->ident = NULL;
             n->str = NULL;
             n->node_num = 0;
-            printf("node INTVAL : %d\n", (int)(n->value));
+            printf("node INTVAL : %d   ligne : %d\n", (int)(n->value), yylineno);
             break;
 
       case NODE_BOOLVAL:
@@ -754,7 +756,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = va_arg(ap, int);
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = nops;
             n->opr = 0;
@@ -762,7 +764,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->ident = NULL;
             n->str = NULL;
             n->node_num = 0;
-            printf("node BOOLVAL : %d\n", (int)(n->value));
+            printf("node BOOLVAL : %d   ligne : %d\n", (int)(n->value), yylineno);
             break;
 
       case NODE_FUNC:
@@ -773,7 +775,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = 0;
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = nops;
             //n->opr = 0;
@@ -786,8 +788,8 @@ node_t make_node(node_nature nature, int nops, ...) {
               n->opr[i] = va_arg(ap, node_t);
             }
 
-            printf("node FUNC opr[0] type : %s\n", node_type2string(n->opr[0]->type));
-            printf("node FUNC opr[1] ident : %s\n", n->opr[1]->ident);
+            printf("node FUNC opr[0] type : %s   ligne : %d\n", node_type2string(n->opr[0]->type), yylineno);
+            printf("node FUNC opr[1] ident : %s   ligne : %d\n", n->opr[1]->ident, yylineno);
 
             break;
 
@@ -801,7 +803,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = 0;
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = nops;
             //n->opr = 0;
@@ -814,7 +816,7 @@ node_t make_node(node_nature nature, int nops, ...) {
               n->opr[i] = va_arg(ap, node_t);
             }
 
-            printf("node : %s\n",node_nature2string(n->nature));
+            printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
             break;
 
       case NODE_LIST:
@@ -826,7 +828,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->value = 0;
             n->offset = 0;
             n->global_decl = 0;
-            n->lineno = 0;
+            n->lineno = yylineno;
             n->stack_size = 0;
             n->nops = 0;
             //n->opr = 0;
@@ -839,11 +841,33 @@ node_t make_node(node_nature nature, int nops, ...) {
               n->opr[i] = va_arg(ap, node_t);
             }
 
-            printf("node : %s\n",node_nature2string(n->nature));
+            printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
+            // printf("node LIST opr[0]  : %s   ligne : %d\n", node_nature2string(n->opr[0]->nature), yylineno);
+            // printf("node LIST opr[1]  : %s   ligne : %d\n", node_nature2string(n->opr[1]->nature), yylineno);
             break;
 
+        case NODE_DECLS:
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = yylineno;
+            n->stack_size = 0;
+            n->nops = 0;
+            n->opr = 0;
+            n->decl_node = 0;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+
+            printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
+
+
       default:
-          printf("%s\n",node_nature2string(nature));
+          printf("%s   ligne : %d\n",node_nature2string(nature), yylineno);
           break;
     }
     va_end(ap);

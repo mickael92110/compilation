@@ -1,7 +1,6 @@
 int start = 0;
 int end = 100;
-bool b = true;
-
+//bool b = true;
 
 void main () {
   int i , s = start , e = end ;
