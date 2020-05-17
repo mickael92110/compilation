@@ -402,17 +402,23 @@ program         : listdeclnonnull maindecl
                 ;
 
 listdecl        : listdeclnonnull
-                {$$ = NULL; }
+                { $$ = $1; }
                 |
                 { $$ = NULL; }
                 ;
 
 listdeclnonnull : vardecl
+                {
+                  $$ = $1;
+                }
                 | listdeclnonnull vardecl
-                 { $$ = NULL; }
+                 { $$ = make_node(NODE_LIST,2, $1,$2); }
                 ;
 
 vardecl         : type listtypedecl TOK_SEMICOL
+                {
+                  $$ = make_node(NODE_LIST,2, $1,$2);
+                }
                 ;
 
 type            : TOK_INT
@@ -430,6 +436,9 @@ type            : TOK_INT
                 ;
 
 listtypedecl    : decl
+                {
+                  $$ = make_node(NODE_LIST,1, $1);
+                }
                 | listtypedecl TOK_COMMA decl
                 {
                   $$ = make_node(NODE_LIST,2, $1,$3);
@@ -693,7 +702,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = 0;
             n->stack_size = 0;
-            n->nops = nops;
+            n->nops = 0;
             n->opr = NULL;
             n->decl_node = NULL;
             n->ident = NULL;
@@ -703,6 +712,9 @@ node_t make_node(node_nature nature, int nops, ...) {
             break;
 
       case NODE_IDENT:
+
+            n->ident = malloc(sizeof(char*)*100);
+
             n->nature = nature;
             n->type = 0;
             n->value = 0;
@@ -710,7 +722,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = 0;
             n->stack_size = 0;
-            n->nops = nops;
+            n->nops = 0;
             n->opr = 0;
             n->decl_node = 0;
             n->ident = va_arg(ap, char*);
@@ -779,8 +791,56 @@ node_t make_node(node_nature nature, int nops, ...) {
 
             break;
 
-      //Faire node block 
+      //Faire node block
+      case NODE_BLOCK:
 
+            n->opr = malloc(sizeof(node_t)*nops);
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = 0;
+            n->stack_size = 0;
+            n->nops = nops;
+            //n->opr = 0;
+            n->decl_node = 0;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+
+            printf("node : %s\n",node_nature2string(n->nature));
+            break;
+
+      case NODE_LIST:
+
+            n->opr = malloc(sizeof(node_t)*nops);
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = 0;
+            n->stack_size = 0;
+            n->nops = 0;
+            //n->opr = 0;
+            n->decl_node = 0;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+
+            printf("node : %s\n",node_nature2string(n->nature));
+            break;
 
       default:
           printf("%s\n",node_nature2string(nature));
