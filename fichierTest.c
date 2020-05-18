@@ -9,6 +9,6 @@ void main () {
   for ( i = s ; i < e ; i = i + 1) {
     sum = sum + i ;
   }
-  print ( " sum : " , sum , " \ n " ) ;
+  print ( " sum : " , sum , " \n " ) ;
 }
 //Ceci est un commentaire
