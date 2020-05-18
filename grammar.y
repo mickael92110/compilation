@@ -735,13 +735,13 @@ node_t make_node(node_nature nature, int nops, ...) {
 
       case NODE_INTVAL:
             n->nature = nature;
-            n->type = 0;
+            n->type = TYPE_INT;
             n->value = va_arg(ap, int);
             n->offset = 0;
             n->global_decl = 0;
             n->lineno = yylineno;
             n->stack_size = 0;
-            n->nops = nops;
+            n->nops = 0;
             n->opr = 0;
             n->decl_node = 0;
             n->ident = NULL;
@@ -752,13 +752,13 @@ node_t make_node(node_nature nature, int nops, ...) {
 
       case NODE_BOOLVAL:
             n->nature = nature;
-            n->type = 0;
+            n->type = TYPE_BOOL;
             n->value = va_arg(ap, int);
             n->offset = 0;
             n->global_decl = 0;
             n->lineno = yylineno;
             n->stack_size = 0;
-            n->nops = nops;
+            n->nops = 0;
             n->opr = 0;
             n->decl_node = 0;
             n->ident = NULL;
@@ -815,7 +815,6 @@ node_t make_node(node_nature nature, int nops, ...) {
             for(int i = 0; i < n->nops; ++i){
               n->opr[i] = va_arg(ap, node_t);
             }
-
             printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
             break;
 
@@ -830,7 +829,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = yylineno;
             n->stack_size = 0;
-            n->nops = 0;
+            n->nops = nops;
             //n->opr = 0;
             n->decl_node = 0;
             n->ident = NULL;
@@ -846,7 +845,9 @@ node_t make_node(node_nature nature, int nops, ...) {
             // printf("node LIST opr[1]  : %s   ligne : %d\n", node_nature2string(n->opr[1]->nature), yylineno);
             break;
 
-        case NODE_DECLS:
+      case NODE_DECLS:
+
+            n->opr = malloc(sizeof(node_t)*nops);
 
             n->nature = nature;
             n->type = 0;
@@ -855,16 +856,44 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->global_decl = 0;
             n->lineno = yylineno;
             n->stack_size = 0;
-            n->nops = 0;
-            n->opr = 0;
+            n->nops = nops;
+            //n->opr = 0;
             n->decl_node = 0;
             n->ident = NULL;
             n->str = NULL;
             n->node_num = 0;
 
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
 
             printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
+            break;
 
+      case NODE_DECL:
+
+            n->opr = malloc(sizeof(node_t)*nops);
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = yylineno;
+            n->stack_size = 0;
+            n->nops = nops;
+            //n->opr = 0;
+            n->decl_node = 0;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+
+            printf("node : %s   ligne : %d\n",node_nature2string(n->nature), yylineno);
+            break;
 
       default:
           printf("%s   ligne : %d\n",node_nature2string(nature), yylineno);
