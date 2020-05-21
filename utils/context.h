@@ -4,6 +4,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // 26 lower + 26 upper case letters, 10 figures, and '_'
 #define NB_ELEM_ALPHABET 63
@@ -30,6 +32,7 @@ void free_context(context_t context);
 bool context_add_element(context_t context, char * idf, void * data);
 void * get_data(context_t context, char * idf);
 
+int get_indice(char str);
+void free_noeud(noeud_t noeud);
 
 #endif
-
