@@ -28,4 +28,3 @@ char * get_global_string(int32_t index);
 void free_global_strings();
 
 #endif
-

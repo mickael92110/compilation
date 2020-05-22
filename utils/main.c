@@ -1,4 +1,5 @@
 #include "context.h"
+#include "env.h"
 
 int main(void){
   printf("Test main\n");
@@ -104,6 +105,27 @@ int main(void){
   //
   //   ++str;
   // }
+  printf("============================Test env.c=============================\n");
+  push_global_context();
+  push_context();
+  void * data3;
+  void * data4;
+  int niceee = 1;
+  int niceeee = 2;
+  data3 = &niceee;
+  data4 = &niceeee;
+  char * idf3 = "ghijk";
+  char * idf4 = "lmnop";
+  int32_t i = env_add_element(idf3,data3,4);
+  printf("création 0 ; déja présent -1 = %d\n", i);
+  int32_t j = env_add_element(idf3,data3,4);
+  printf("création 0 ; déja présent -1 = %d\n", j);
 
+  int32_t h = env_add_element(idf4,data4,4);
+  printf("création 0 ; déja présent -1 = %d\n", h);
+
+  int ultraNice2 = *((int*)get_decl_node(idf4));
+  printf("ultra nice2 : %d\n", ultraNice2);
+  //pop_context();
   return 0;
 }

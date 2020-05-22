@@ -1,5 +1,6 @@
 gcc -c context.c
 gcc -c main.c
-gcc context.o main.o -o exec
+gcc -c env.c
+gcc context.o main.o env.o -o exec
 ./exec
 rm *.o

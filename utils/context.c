@@ -4,9 +4,6 @@ context_t create_context(){
   context_t out;
   out = malloc(sizeof(context_s));
   out->root = malloc(sizeof(noeud_s));
-
-
-
   return out;
 }
 
@@ -80,7 +77,7 @@ void free_context(context_t context){
 }
 
 
-//fonction recursive qui parcourt tous les noeuds 
+//fonction recursive qui parcourt tous les noeuds
 void free_noeud(noeud_t noeud){
   for(int i = 0; i < NB_ELEM_ALPHABET ; ++i){
     if(noeud->suite_idf[i] != NULL){
