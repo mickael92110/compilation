@@ -1,36 +1,31 @@
 #include "context.h"
+#include "env.h"
 
 int main(void){
-  printf("Test main\n");
-  context_t con = create_context();
-  void * data;
-  void * data2;
-  int nicee = 420;
-  int nice = 69;
-  data = &nice;
-  data2 = &nicee;
-  char * idf = "abcdef";
-  char * idf2 = "skdlfgbjmegglbergoa";
-  bool test = context_add_element(con,idf,data);
+  // printf("Test main\n");
+  // context_t con = create_context();
+  // void * data;
+  // void * data2;
+  // int nicee = 420;
+  // int nice = 69;
+  // data = &nice;
+  // data2 = &nicee;
+  // char * idf = "abcdef";
+  // char * idf2 = "skdlfgbjmegglbergoa";
+  // bool test = context_add_element(con,idf,data);
+  //
+  // printf("test = %d\n", test);
+  // bool test2 = context_add_element(con,idf2,data2);
+  // printf("test2 = %d\n", test2);
+  //
+  // int veryNice = *((int*)get_data(con, idf));
+  // printf("very nice : %d\n", veryNice);
+  //
+  // int ultraNice = *((int*)get_data(con, idf2));
+  // printf("ultra nice : %d\n", ultraNice);
+  //
+  // free_context(con);
 
-  printf("test = %d\n", test);
-  bool test2 = context_add_element(con,idf2,data2);
-  printf("test2 = %d\n", test2);
-
-  int veryNice = *((int*)get_data(con, idf));
-  printf("very nice : %d\n", veryNice);
-
-  int ultraNice = *((int*)get_data(con, idf2));
-  printf("ultra nice : %d\n", ultraNice);
-
-  free_context(con);
-
-  // for(int i = 0; i < 63 ; ++i){
-  //   printf("suite_idf[%2d] : %d\n", i, con->root->suite_idf[i] != NULL);
-  //   if(con->root->suite_idf[i]){
-  //     while(con->root->suite_idf[i]-)
-  //   }
-  // }
 
   //int indice;
   // noeud_t noeud = con->root;
@@ -105,5 +100,22 @@ int main(void){
   //   ++str;
   // }
 
+  printf("================= Test env =================\n");
+
+push_global_context();
+push_context();
+char * ident = "test";
+char * ident2 = "test";
+void * node;
+int nice = 69;
+node = &nice;
+int32_t size = 4;
+env_add_element(ident, node, size);
+//env_add_element(ident2, node, size);
+
+int veryNice = *((int*)get_decl_node(ident));
+printf("very nice : %d\n", veryNice);
+
+pop_context();
   return 0;
 }

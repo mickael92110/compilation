@@ -1,11 +1,8 @@
 #include "context.h"
 
 context_t create_context(){
-  context_t out;
-  out = malloc(sizeof(context_s));
-  out->root = malloc(sizeof(noeud_s));
-
-
+  context_t out = calloc(1,sizeof(context_s));
+  out->root = calloc(1,sizeof(noeud_s));
 
   return out;
 }
@@ -25,7 +22,7 @@ bool context_add_element(context_t context, char * idf, void * data){
 
       if(noeud->suite_idf[indice] == NULL)
       {
-        noeud->suite_idf[indice] = malloc(sizeof(noeud_s));
+        noeud->suite_idf[indice] = calloc(1,sizeof(noeud_s));
       }
 
       //On stock la valeur du noeud precedent pour pouvoir la recuperer plus tard
@@ -80,7 +77,7 @@ void free_context(context_t context){
 }
 
 
-//fonction recursive qui parcourt tous les noeuds 
+//fonction recursive qui parcourt tous les noeuds
 void free_noeud(noeud_t noeud){
   for(int i = 0; i < NB_ELEM_ALPHABET ; ++i){
     if(noeud->suite_idf[i] != NULL){
@@ -90,7 +87,7 @@ void free_noeud(noeud_t noeud){
   free(noeud);
 }
 
-
+//Fonction qui renvoie l'indice d'une lettre entre 0 et 63
 int get_indice(char str){
 
   if(str >= 'a' && str <= 'z' ){

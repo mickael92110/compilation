@@ -13,8 +13,6 @@ typedef struct _env_s {
 
 typedef env_s * env_t;
 
-
-
 void push_global_context();
 void push_context();
 void pop_context();
@@ -28,4 +26,3 @@ char * get_global_string(int32_t index);
 void free_global_strings();
 
 #endif
-

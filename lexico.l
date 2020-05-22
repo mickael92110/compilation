@@ -42,191 +42,191 @@ ESPACE          [ \t\n]
 %%
 
 "void" {
-                printf("TOK_VOID\n");
+                //printf("TOK_VOID\n");
                 return TOK_VOID;
 }
 
 "int" {
-                printf("TOK_INT\n");
+                //printf("TOK_INT\n");
                 return TOK_INT;
 }
 
 "=" {
-                printf("TOK_AFFECT\n");
+                //printf("TOK_AFFECT\n");
                 return TOK_AFFECT;
 }
 "==" {
-                printf("TOK_EQ\n");
+                //printf("TOK_EQ\n");
                 return TOK_EQ;
 }
 
 ";" {
-                printf("TOK_SEMICOL\n");
+                //printf("TOK_SEMICOL\n");
                 return TOK_SEMICOL;
 }
 
 ")" {
-                printf("TOK_RPAR\n");
+                //printf("TOK_RPAR\n");
                 return TOK_RPAR;
 }
 
 
 "(" {
-                printf("TOK_LPAR\n");
+                //printf("TOK_LPAR\n");
                 return TOK_LPAR;
 }
 "{" {
-                printf("TOK_LACC\n");
+                //printf("TOK_LACC\n");
                 return TOK_LACC;
 }
 
 "}" {
-                printf("TOK_RACC\n");
+                //printf("TOK_RACC\n");
                 return TOK_RACC;
 }
 
 "," {
-                printf("TOK_COMMA\n");
+                //printf("TOK_COMMA\n");
                 return TOK_COMMA;
 }
 
 "for" {
-                printf("TOK_FOR\n");
+                //printf("TOK_FOR\n");
                 return TOK_FOR;
 }
 
 "<" {
-                printf("TOK_LT\n");
+                //printf("TOK_LT\n");
                 return TOK_LT;
 }
 ">" {
-                printf("TOK_GT\n");
+                //printf("TOK_GT\n");
                 return TOK_GT;
 }
 "<=" {
-                printf("TOK_LE\n");
+                //printf("TOK_LE\n");
                 return TOK_LE;
 }
 ">=" {
-                printf("TOK_GE\n");
+                //printf("TOK_GE\n");
                 return TOK_GE;
 }
 "!=" {
-                printf("TOK_NE\n");
+                //printf("TOK_NE\n");
                 return TOK_NE;
 }
 
 "+" {
-                printf("TOK_PLUS\n");
+                //printf("TOK_PLUS\n");
                 return TOK_PLUS;
 }
 "-" {
-                printf("TOK_MINUS\n");
+                //printf("TOK_MINUS\n");
                 return TOK_MINUS;
 }
 
 "*" {
-                printf("TOK_MUL\n");
+                //printf("TOK_MUL\n");
                 return TOK_MUL;
 }
 
 "/" {
-                printf("TOK_DIV\n");
+                //printf("TOK_DIV\n");
                 return TOK_DIV;
 }
 
 "%" {
-                printf("TOK_MOD\n");
+                //printf("TOK_MOD\n");
                 return TOK_MOD;
 }
 
 "print" {
-                printf("TOK_PRINT\n");
+                //printf("TOK_PRINT\n");
                 return TOK_PRINT;
 }
 
 "bool" {
-                printf("TOK_BOOL\n");
+                //printf("TOK_BOOL\n");
                 return TOK_BOOL;
 }
 "true" {
-                printf("TOK_TRUE\n");
+                //printf("TOK_TRUE\n");
                 return TOK_TRUE;
 }
 
 "false" {
-                printf("TOK_FALSE\n");
+                //printf("TOK_FALSE\n");
                 return TOK_FALSE;
 }
 "if" {
-                printf("TOK_IF\n");
+                //printf("TOK_IF\n");
                 return TOK_IF;
 }
 "else" {
-                printf("TOK_ELSE\n");
+                //printf("TOK_ELSE\n");
                 return TOK_ELSE;
 }
 
 "while" {
-                printf("TOK_WHILE\n");
+                //printf("TOK_WHILE\n");
                 return TOK_WHILE;
 }
 "!" {
-                printf("TOK_NOT\n");
+                //printf("TOK_NOT\n");
                 return TOK_NOT;
 }
 
 "~" {
-                printf("TOK_BNOT\n");
+                //printf("TOK_BNOT\n");
                 return TOK_BNOT;
 }
 
 "&" {
-                printf("TOK_BAND\n");
+                //printf("TOK_BAND\n");
                 return TOK_BAND;
 }
 
 "|" {
-                printf("TOK_BOR\n");
+                //printf("TOK_BOR\n");
                 return TOK_BOR;
 }
 "&&" {
-                printf("TOK_AND\n");
+                //printf("TOK_AND\n");
                 return TOK_AND;
 }
 "||" {
-                printf("TOK_OR\n");
+                //printf("TOK_OR\n");
                 return TOK_OR;
 }
 
 "do" {
-                printf("TOK_DO\n");
+                //printf("TOK_DO\n");
                 return TOK_DO;
 }
 
 {IDF} {
                 yylval.strval = strdup(yytext);
-                printf("TOK_IDF str = %s\n", yytext );
-                printf("TOK_IDF\n");
+                //printf("TOK_IDF str = %s\n", yytext );
+                //printf("TOK_IDF\n");
                 return TOK_IDENT;
 }
 
 {ENTIER} {
                 /* A completer : affecter yylval.intval et faire des verifications */
                 yylval.intval =(int32_t)atoi(yytext);
-                printf("TOK_INTVAL val = %d\n", atoi(yytext) );
+                //printf("TOK_INTVAL val = %d\n", atoi(yytext) );
                 return TOK_INTVAL;
 }
 
 {CHAINE} {
                 /* A completer : affecter yylval.strval */
                 yylval.strval = strdup(yytext);
-                printf("TOK_STRING str = %s\n", yytext );
+                //printf("TOK_STRING str = %s\n", yytext );
                 return TOK_STRING;
 }
 
 {COMMENTAIRE} {
-                printf("Commentaire str = %s\n", yytext );
+                //printf("Commentaire str = %s\n", yytext );
 }
 
 [ \t\n]+
