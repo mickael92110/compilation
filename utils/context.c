@@ -58,6 +58,11 @@ void * get_data(context_t context, char * idf){
   //On va a la derniere lettre pour avoir data
   while(idf[0] != '\0'){
     indice = get_indice(idf[0]);
+    //Si jamais l'idf n'existe pas dans ce contexte on retourn null
+    if(noeud->suite_idf[indice] == NULL)
+    {
+     return NULL;
+    }
     printf("lettre : %c\n",noeud->suite_idf[indice]->lettre);
     prec = noeud;
     noeud = noeud->suite_idf[indice];

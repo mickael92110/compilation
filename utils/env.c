@@ -6,47 +6,32 @@ int32_t current_offset;
 
 void push_global_context() {
     env = malloc(sizeof(env_s));
-    context_t glob = create_context();
-    env->context = glob;
-    env->next = NULL;
+    env->context = create_context();
 }
 void push_context() {
     context_t bloc = create_context();
     env->next = env;
     env->context = bloc;
 }
-/*void pop_context() {
+
+void pop_context() {
     free_context(env->context);
     env = env->next;
-}*/
-void * get_decl_node(char * ident) {
-    int indice;
-    noeud_t prec;
-    env_t e = env;
-    char * idf = ident;
-//On suppose que l'identifiant existe d'ne au moins 1 contexte
-//Tant qu'on a pas trouvé l'identifiant donc tant que idf n'est pas égale au caractère fin
-    do{
-      indice = get_indice(idf[0]);
-      //Si jamais l'idf n'existe pas dans ce contexte on cherche dans le suivant
-      if(e->context->root->suite_idf[indice] == NULL)
-      {
-        //On va au contexte suivant
-        e = e->next;
-
-        //On réinitialise idf en ident
-        idf = ident;
-      }
-      //On stock la valeur du noeud precedent pour pouvoir la recuperer plus tard
-      prec = e->context->root;
-      //On passe au noeuds suivant (le premier noeud ne contient pas d'attribu lettre)
-      e->context->root = e->context->root->suite_idf[indice];
-      ++idf;
-
-  }while(idf[0] != '\0');
-  //On retourne la déclaration de l'identifiant correspondant
-  return prec->data;
 }
+void * get_decl_node(char * ident) {
+  noeud_t donnee;
+  env_t e = env;
+//On suppose que l'identifiant existe dans au moins 1 contexte
+//Tant qu'on a pas trouvé l'identifiant donc tant que donnee == NULL
+  do{
+    donnee = get_data(e->context, ident);
+    e = e->next;
+
+    }while(donnee == NULL);
+
+  return donnee;
+}
+
 
 //Je ne suis pas du tout sure pour les retours de cette fonction j'ai pas comprisexactement quelle valeur il fallait retourner
 int32_t env_add_element(char * ident, void * node, int32_t size){
