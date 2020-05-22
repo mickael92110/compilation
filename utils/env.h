@@ -26,5 +26,4 @@ int32_t add_string(char * str);
 int32_t get_global_strings_number();
 char * get_global_string(int32_t index);
 void free_global_strings();
-
 #endif

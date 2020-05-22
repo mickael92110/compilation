@@ -107,35 +107,25 @@ int main(void){
   // }
   printf("============================Test env.c=============================\n");
   push_global_context();
-  /*void * data4;
-  int deux = 2;
-  data4 = &deux;
-  char * idf4 = "lmnop";
-  int32_t k = env_add_element(idf4,data4,4);
-  printf("création 0 ; déja présent -1 = %d\n", k);*/
-  pop_context();
-
-  /*push_context();
-  void * data3;
-  void * data5;
+  push_context();
+  void * donnee;
   int un = 1;
-  int trois = 3;
-  data3 = &un;
-  data5 = &trois;
-  char * idf3 = "ghijk";
-  char * idf5 = "qrstuv";
-  int32_t i = env_add_element(idf3,data3,4);
+  donnee = &un;
+  char * identifiant = "hello";
+  int32_t i = env_add_element(identifiant,donnee,4);
   printf("création 0 ; déja présent -1 = %d\n", i);
-  int32_t j = env_add_element(idf3,data3,4);
+  int32_t j = env_add_element(identifiant,donnee,4);
   printf("création 0 ; déja présent -1 = %d\n", j);
 
-  int32_t h = env_add_element(idf5,data5,4);
+  void * donnee2;
+  int deux = 2;
+  donnee2 = &deux;
+  char * identifiant2 = "hello2";
+  int32_t h = env_add_element(identifiant2,donnee2,4);
   printf("création 0 ; déja présent -1 = %d\n", h);
 
-  int val_deux = *((int*)get_decl_node(idf4));
-  printf("val_deux : %d\n", val_deux);
-
-  pop_context();*/
-
+  int ultraNice2 = *((int*)get_decl_node(identifiant2));
+  printf("ultra nice2 : %d\n", ultraNice2);
+//  pop_context();
   return 0;
 }

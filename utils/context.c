@@ -2,8 +2,8 @@
 
 context_t create_context(){
   context_t out;
-  out = malloc(sizeof(context_s));
-  out->root = malloc(sizeof(noeud_s));
+  out = calloc(1,sizeof(context_s));
+  out->root = calloc(1,sizeof(noeud_s));
   return out;
 }
 
@@ -23,14 +23,17 @@ bool context_add_element(context_t context, char * idf, void * data){
       if(noeud->suite_idf[indice] == NULL)
       {
         noeud->suite_idf[indice] = malloc(sizeof(noeud_s));
+        noeud->suite_idf[indice]->lettre = idf[0];
+        //printf("lettre ajouté : %c\n",   noeud->suite_idf[indice]->lettre);
+        noeud->suite_idf[indice]->data = NULL;
+        noeud->suite_idf[indice]->idf_existant = false;
       }
 
       //On stock la valeur du noeud precedent pour pouvoir la recuperer plus tard
       prec = noeud;
       //On passe au noeuds suivant (le premier noeud ne contient pas d'attribu lettre)
       noeud = noeud->suite_idf[indice];
-      noeud->lettre = idf[0];
-      noeud->data = NULL;
+
       ++idf;
 
   }while(idf[0] != '\0');
@@ -68,6 +71,7 @@ void * get_data(context_t context, char * idf){
     noeud = noeud->suite_idf[indice];
     ++idf;
   }
+    if(prec->data == NULL) printf("null\n");
     return prec->data;
 }
 
