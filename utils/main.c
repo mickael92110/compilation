@@ -99,37 +99,6 @@ int main(void){
   //
   //   ++str;
   // }
-  printf("============================Test env.c=============================\n");
-  push_global_context();
-  /*void * data4;
-  int deux = 2;
-  data4 = &deux;
-  char * idf4 = "lmnop";
-  int32_t k = env_add_element(idf4,data4,4);
-  printf("création 0 ; déja présent -1 = %d\n", k);*/
-  pop_context();
-
-  /*push_context();
-  void * data3;
-  void * data5;
-  int un = 1;
-  int trois = 3;
-  data3 = &un;
-  data5 = &trois;
-  char * idf3 = "ghijk";
-  char * idf5 = "qrstuv";
-  int32_t i = env_add_element(idf3,data3,4);
-  printf("création 0 ; déja présent -1 = %d\n", i);
-  int32_t j = env_add_element(idf3,data3,4);
-  printf("création 0 ; déja présent -1 = %d\n", j);
-
-  int32_t h = env_add_element(idf5,data5,4);
-  printf("création 0 ; déja présent -1 = %d\n", h);
-
-  int val_deux = *((int*)get_decl_node(idf4));
-  printf("val_deux : %d\n", val_deux);
-
-  pop_context();*/
 
   printf("================= Test env =================\n");
 
