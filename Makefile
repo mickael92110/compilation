@@ -23,7 +23,7 @@ y.tab.c: grammar.y Makefile
 	yacc -d grammar.y
 
 lex.yy.c: lexico.l Makefile
-	lex lexico.l
+	lex  lexico.l
 
 lex.yy.o: lex.yy.c
 	gcc $(DEBUG_FLAGS) $(CFLAGS) $(INCLUDE) -o $@ -c $<

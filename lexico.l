@@ -18,6 +18,8 @@ char * infile = NULL;
 char * outfile = NULL;
 bool stop_after_syntax = false;
 bool stop_after_verif = false;
+int trace;
+int reg_max;
 /* A completer */
 
 #if YYDEBUG
@@ -252,6 +254,11 @@ int yywrap(void) {
 
 int main(int argc, char ** argv) {
     /* A completer */
+    if(argc == 1){
+      print_regles();
+      return 0;
+    }
+    
     node_t program_root;
     parse_args(argc, argv);
     #if YYDEBUG

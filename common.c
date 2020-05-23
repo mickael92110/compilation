@@ -14,12 +14,128 @@
 
 extern char * infile;
 extern char * outfile;
+extern int trace;
+extern int reg_max;
+extern bool stop_after_syntax;
+extern bool stop_after_verif;
 /* A completer */
 
+void print_regles(){
+  printf("\n");
+  printf("Utilisation: ./minicc <options> <infile>\n  <infile>      : fichier d'entree a compiler (obligatoire)\n");
+  printf("\noptions : \n");
+  printf("  -b : Affiche une bannière indiquant le nom du compilateur et des membres du binôme\n");
+  printf("  -o <filename> : Définit le nom du fichier assembleur produit (défaut : out.s)\n");
+  printf("  -t <int> : Définit le niveau de trace à utiliser entre 0 et 5 (0 = pas de trace ; 5 = toutes les traces.defaut = 0).\n");
+  printf("  -r <int> : Définit le nombre maximum de registres à utiliser, entre 4 et 8 (défaut : 8).\n");
+  printf("  -s : Arrêter la compilation après l’analyse syntaxique (défaut = non).\n");
+  printf("  -v : Arrêter la compilation après la passe de vérifications (défaut = non).\n");
+  printf("  -h : Afficher la liste des options (fonction d’usage) et arrêter le parsing des arguments.\n");
+  printf("\n");
+}
 
 void parse_args(int argc, char ** argv) {
     /* A corriger et completer */
-    infile = argv[1];
+  int s_flag = 0;
+  int v_flag = 0;
+
+  int index;
+  int c;
+  int cpt = 0;
+
+  char * outfile_temp = "out.s";
+
+  while ((c = getopt (argc, argv, "bo:t:r:svh")) != -1)
+    switch (c)
+      {
+      case 'b':
+        if(argc > 2){
+          printf("\nErreur : il y a trop d'arguments pour l'option -b \n ");
+          print_regles();
+          exit(0);
+        }
+        else{
+          printf("  *-------------------------------------------------*\n");
+          printf(" | Compilateur :  minicc                             |\n");
+          printf(" | Auteurs : BARTNIK Minngie, RAMILISON Mickael      |\n");
+          printf("  *-------------------------------------------------*\n");
+          exit(0);
+        }
+        break;
+
+      case 'o':
+        outfile_temp = optarg;
+        break;
+
+      case 't':
+        if(optarg[0]<'0' || optarg[0]>'5'){
+          printf("\nErreur : argument de -t \n ");
+          print_regles();
+          exit(0);
+        }
+        trace = atoi(optarg);
+        break;
+
+      case 'r':
+        if(optarg[0]<'4' || optarg[0]>'8'){
+          printf("\nErreur : argument de -r \n ");
+          print_regles();
+          exit(0);
+        }
+        reg_max = atoi(optarg);
+        break;
+
+      case 's':
+        s_flag = 1;
+        if(v_flag){
+          printf("\nErreur : options incompatibles\n");
+          print_regles();
+          exit(0);
+        }
+        else{
+          stop_after_syntax = true;
+        }
+        break;
+
+      case 'v':
+        v_flag = 1;
+        if(s_flag){
+          printf("\nErreur : options incompatibles\n");
+          print_regles();
+          exit(0);
+        }
+        else{
+        stop_after_verif = true;
+        }
+        break;
+
+      case 'h':
+        print_regles();
+        exit(0);
+        break;
+
+      default:
+        break;
+      }
+
+    for(index = optind; index < argc; index++){
+        ++cpt;
+    }
+
+    if(cpt > 1){
+      printf("\nErreur : trop d'arguments\n");
+      print_regles();
+      exit(0);
+    }
+
+    outfile = outfile_temp;
+    infile = argv[optind];
+
+    if(infile == NULL){
+      printf("\nErreur : pas de fichier source\n");
+      print_regles();
+      exit(0);
+    }
 }
 
 

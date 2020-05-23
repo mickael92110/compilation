@@ -1,4 +1,4 @@
 make realclean
 make
-./minicc fichierTest.c
+./minicc ./fichier_source/fichierTest.c
 xdot testy

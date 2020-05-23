@@ -424,7 +424,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->nature = nature;
             n->type = 0;
             n->value = 0;
-            n->offset = 0;
+            n->offset = -1;
             n->global_decl = 0;
             n->lineno = yylineno;
             n->stack_size = 0;
