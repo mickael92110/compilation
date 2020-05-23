@@ -32,14 +32,13 @@ extern int yydebug;
 %option yylineno
 
 LETTRE          [a-zA-Z]
-/* A completer ; fausses definitions pour que lex ne fasse pas d'erreur */
 CHIFFRE         [0-9]
-IDF             {LETTRE}({LETTRE}|{CHIFFRE}|'_')*
-SIGNE           [+|-]?
-ENTIER          {SIGNE}{CHIFFRE}*
+IDF             {LETTRE}({LETTRE}|{CHIFFRE}|[_])*
+ENTIER          {CHIFFRE}*
 CHAINE          \"[^"]*\"
 COMMENTAIRE     \/\/([^\n])*
 ESPACE          [ \t\n]
+
 
 %%
 
@@ -122,10 +121,12 @@ ESPACE          [ \t\n]
                 //printf("TOK_PLUS\n");
                 return TOK_PLUS;
 }
+
 "-" {
                 //printf("TOK_MINUS\n");
                 return TOK_MINUS;
 }
+
 
 "*" {
                 //printf("TOK_MUL\n");
@@ -220,10 +221,12 @@ ESPACE          [ \t\n]
                 return TOK_INTVAL;
 }
 
+
+
 {CHAINE} {
                 /* A completer : affecter yylval.strval */
                 yylval.strval = strdup(yytext);
-                //printf("TOK_STRING str = %s\n", yytext );
+                //printf("TOK_STRING str = %s\n", strdup(yytext) );
                 return TOK_STRING;
 }
 
@@ -258,7 +261,7 @@ int main(int argc, char ** argv) {
       print_regles();
       return 0;
     }
-    
+
     node_t program_root;
     parse_args(argc, argv);
     #if YYDEBUG
@@ -269,8 +272,8 @@ int main(int argc, char ** argv) {
     yyin = fopen(infile, "r");
     yyparse(&program_root);
     fclose(yyin);
-    dump_tree(program_root, "testy");
-    //analyse_tree(program_root);
+    //dump_tree(program_root, "testy");
+    analyse_tree(program_root);
     yylex_destroy();
 
     return 0;

@@ -248,7 +248,7 @@ expr            : expr TOK_MUL expr
                 }
                 |TOK_MINUS expr %prec TOK_UMINUS
                 {
-                  $$ = $2;
+                  $$ = make_node(NODE_UMINUS,1,$2);
                 }
                 |expr TOK_GE expr
                 {
@@ -437,6 +437,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             break;
 
       case NODE_INTVAL:
+
             n->nature = nature;
             n->type = TYPE_INT;
             n->value = va_arg(ap, int);
@@ -514,8 +515,6 @@ node_t make_node(node_nature nature, int nops, ...) {
             }
             break;
 
-
-
       case NODE_PLUS:
       case NODE_MINUS:
       case NODE_MUL:
@@ -561,7 +560,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             break;
 
 
-      case NODE_STRINGVAL:
+      case NODE_STRINGVAL: 
             n->nature = nature;
             n->type = 0;
             n->value = 0;
@@ -575,6 +574,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->ident = NULL;
             n->str = va_arg(ap, char*);
             n->node_num = 0;
+
             break;
 
       default:

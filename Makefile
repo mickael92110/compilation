@@ -17,7 +17,7 @@ INCLUDE = -I$(UTILS)
 all: minicc
 
 minicc: y.tab.o lex.yy.o common.o
-	gcc $(CFLAGS) $(INCLUDE) -L$(UTILS) y.tab.o lex.yy.o common.o -o $@ -lminiccutils 
+	gcc $(CFLAGS) $(INCLUDE) -L$(UTILS) y.tab.o lex.yy.o common.o -o $@ -lminiccutils
 
 y.tab.c: grammar.y Makefile
 	yacc -d grammar.y
@@ -39,4 +39,3 @@ clean:
 
 realclean: clean
 	rm -f y.tab.c y.tab.h lex.yy.c $(EXE)
-

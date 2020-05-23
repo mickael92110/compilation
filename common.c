@@ -175,11 +175,11 @@ static int32_t dump_tree2dot_rec(FILE * f, node_t n, int32_t node_num) {
                 int32_t i = 1;
                 while (true) {
                     str[i - 1] = n->str[i];
-                    i += 1;
                     if (n->str[i] == '"') {
                         str[i - 1] = '\0';
                         break;
                     }
+                    i += 1;
                 }
                 fprintf(f, "    N%d [shape=record, label=\"{{NODE %s|Type: %s}|{val: %s}}\"];\n", node_num, node_nature2string(n->nature), node_type2string(n->type), str);
             }
