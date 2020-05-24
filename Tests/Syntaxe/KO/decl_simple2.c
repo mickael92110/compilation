@@ -1,3 +1,3 @@
 void main () {
-  int _a;
+  int int;
 }

@@ -10,6 +10,7 @@
 #include "defs.h"
 #include "common.h"
 #include "mips_inst.h"
+#include "passe1.h"
 
 
 
@@ -379,7 +380,7 @@ node_t make_node(node_nature nature, int nops, ...) {
       case NODE_DOWHILE:
       case NODE_PRINT:
 
-            n->opr = malloc(sizeof(node_t)*nops);
+            n->opr = calloc(nops,sizeof(node_t));
 
             n->nature = nature;
             n->type = 0;
@@ -419,7 +420,7 @@ node_t make_node(node_nature nature, int nops, ...) {
 
       case NODE_IDENT:
 
-            n->ident = malloc(sizeof(char*)*100);
+            n->ident = calloc(100,sizeof(char*));
 
             n->nature = nature;
             n->type = 0;
@@ -470,7 +471,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             break;
 
       case NODE_FUNC:
-            n->opr = malloc(sizeof(node_t)*nops);
+            n->opr = calloc(nops,sizeof(node_t));
 
             n->nature = nature;
             n->type = 0;
@@ -494,7 +495,7 @@ node_t make_node(node_nature nature, int nops, ...) {
 
       case NODE_LIST:
 
-            n->opr = malloc(sizeof(node_t)*nops);
+            n->opr = calloc(nops,sizeof(node_t));
 
             n->nature = nature;
             n->type = 0;
@@ -538,7 +539,7 @@ node_t make_node(node_nature nature, int nops, ...) {
       case NODE_BNOT:
       case NODE_UMINUS:
       case NODE_AFFECT:
-            n->opr = malloc(sizeof(node_t)*nops);
+            n->opr = calloc(nops,sizeof(node_t));
 
             n->nature = nature;
             n->type = 0;
@@ -560,7 +561,7 @@ node_t make_node(node_nature nature, int nops, ...) {
             break;
 
 
-      case NODE_STRINGVAL: 
+      case NODE_STRINGVAL:
             n->nature = nature;
             n->type = 0;
             n->value = 0;
@@ -591,11 +592,10 @@ node_t make_node(node_nature nature, int nops, ...) {
 void analyse_tree(node_t root) {
     if (!stop_after_syntax) {
         // Appeler la passe 1
-
+        passe1(root);
         if (!stop_after_verif) {
             create_program();
             // Appeler la passe 2
-
             dump_mips_program(outfile);
             free_program();
         }

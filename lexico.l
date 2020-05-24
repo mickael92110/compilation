@@ -274,6 +274,7 @@ int main(int argc, char ** argv) {
     fclose(yyin);
     //dump_tree(program_root, "testy");
     analyse_tree(program_root);
+    dump_tree(program_root,"arbre_passe1");
     yylex_destroy();
 
     return 0;
