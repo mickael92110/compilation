@@ -1,4 +1,7 @@
 make realclean
 make
-./minicc ./fichier_source/fichierTest.c
-xdot testy
+./minicc fichierTest.c
+xdot arbre_passe1.dot
+rm arbre_passe1.dot
+rm arbre_syntaxe.dot
+make realclean

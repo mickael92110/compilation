@@ -41,4 +41,4 @@ clean:
 	rm -f *.o
 
 realclean: clean
-	rm -f y.tab.c y.tab.h lex.yy.c $(EXE)
+	rm -f y.tab.c y.tab.h lex.yy.c *.dot $(EXE)
