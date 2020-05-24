@@ -3,6 +3,7 @@
 
 env_t env_courant;
 int32_t offset_courant = 0;
+int32_t offset_data = 0;y
 // Y'aura forcement deux offset : un pour la pile et l'autre pour le .data
 // Pas forcement d'apres le sujet en faite
 
@@ -54,7 +55,6 @@ void * get_decl_node(char * ident) {
   do{
     donnee = get_data(e->context, ident);
     e = e->next;
-
     }while(donnee == NULL);
 
   return donnee;
@@ -71,10 +71,12 @@ int32_t get_env_current_offset(){
 
 // ajouter a la fin du global context
 int32_t add_string(char * str){
-  return 0;
+  offset_data += 4*length(str);
+  return offset_data ;
 
 }
 int32_t get_global_strings_number(){
+
   return 0;
 
 }
