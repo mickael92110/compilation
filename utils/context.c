@@ -10,13 +10,13 @@ context_t create_context(){
 bool context_add_element(context_t context, char * idf, void * data){
 
   noeud_t noeud = context->root;
-  noeud_t prec;
   int indice;
 
   // On parcourt la liste tant que idf n'est pas egale au caractere de fin
   do{
 
       indice = get_indice(idf[0]);
+
       // On regarde la premiere lettre de idf
       // si on a pas alloue de l'espace pour cette lettre on alloue de l'espace
 
@@ -25,9 +25,7 @@ bool context_add_element(context_t context, char * idf, void * data){
         noeud->suite_idf[indice] = calloc(1,sizeof(noeud_s));
       }
 
-      //On stock la valeur du noeud precedent pour pouvoir la recuperer plus tard
-      prec = noeud;
-      //On passe au noeuds suivant (le premier noeud ne contient pas d'attribut lettre)
+      //On passe au noeuds suivant (le premier noeud ne contient pas d'attribu lettre)
       noeud = noeud->suite_idf[indice];
       noeud->lettre = idf[0];
       noeud->data = NULL;
@@ -36,14 +34,14 @@ bool context_add_element(context_t context, char * idf, void * data){
   }while(idf[0] != '\0');
 
   //Si le mot existe deja dans ce contexte alors on return false
-  if(prec->idf_existant == true){
+  if(noeud->idf_existant == true){
     return false;
   }
-  //Sinon on affecte data et termine le mot en mettant idf_existant a true
+  //Sinon on afficte data et termine le mot en mettant idf_existant a true
   else
   {
-    prec->idf_existant = true;
-    prec->data = data;
+    noeud->idf_existant = true;
+    noeud->data = data;
   }
 
   return true;
@@ -52,7 +50,6 @@ bool context_add_element(context_t context, char * idf, void * data){
 
 void * get_data(context_t context, char * idf){
   noeud_t noeud = context->root;
-  noeud_t prec;
   int indice;
 
   //On va a la derniere lettre pour avoir data
@@ -64,11 +61,10 @@ void * get_data(context_t context, char * idf){
      return NULL;
     }
     printf("lettre : %c\n",noeud->suite_idf[indice]->lettre);
-    prec = noeud;
     noeud = noeud->suite_idf[indice];
     ++idf;
   }
-    return prec->data;
+    return noeud->data;
 }
 
 void free_context(context_t context){
@@ -120,3 +116,4 @@ int get_indice(char str){
     return 0;
   }
 }
+

@@ -2,29 +2,29 @@
 #include "env.h"
 
 int main(void){
-  // printf("Test main\n");
-  // context_t con = create_context();
-  // void * data;
-  // void * data2;
-  // int nicee = 420;
-  // int nice = 69;
-  // data = &nice;
-  // data2 = &nicee;
-  // char * idf = "abcdef";
-  // char * idf2 = "skdlfgbjmegglbergoa";
-  // bool test = context_add_element(con,idf,data);
-  //
-  // printf("test = %d\n", test);
-  // bool test2 = context_add_element(con,idf2,data2);
-  // printf("test2 = %d\n", test2);
-  //
-  // int veryNice = *((int*)get_data(con, idf));
-  // printf("very nice : %d\n", veryNice);
-  //
-  // int ultraNice = *((int*)get_data(con, idf2));
-  // printf("ultra nice : %d\n", ultraNice);
-  //
-  // free_context(con);
+  printf("Test main\n");
+  context_t con = create_context();
+  void * data;
+  void * data2;
+  int val1 = 420;
+  int val2 = 69;
+  data = &val1;
+  data2 = &val2;
+  char * idf = "val1";
+  char * idf2 = "val2";
+  bool test = context_add_element(con,idf,data);
+
+  printf("retour context_add_element test1 = %d\n", test);
+  bool test2 = context_add_element(con,idf2,data2);
+  printf("retour context_add_element test2 = %d\n", test2);
+
+  int valeur1 = *((int*)get_data(con, idf));
+  printf("valeur1: %d\n", valeur1);
+
+  int valeur2 = *((int*)get_data(con, idf2));
+  printf("valeur2 : %d\n", valeur2);
+
+  free_context(con);
 
 
   //int indice;
@@ -107,15 +107,16 @@ push_context();
 char * ident = "test";
 char * ident2 = "test";
 void * node;
-int nice = 69;
-node = &nice;
+int nice2 = 69;
+node = &nice2;
 int32_t size = 4;
 env_add_element(ident, node, size);
 //env_add_element(ident2, node, size);
 
-int veryNice = *((int*)get_decl_node(ident));
-printf("very nice : %d\n", veryNice);
+int veryNice2 = *((int*)get_decl_node(ident));
+printf("very nice : %d\n", veryNice2);
 
 pop_context();
   return 0;
 }
+
