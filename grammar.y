@@ -14,6 +14,7 @@
 
 
 
+
 /* Global variables */
 /* A completer */
 extern bool stop_after_syntax;

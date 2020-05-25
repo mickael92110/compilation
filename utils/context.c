@@ -27,7 +27,7 @@ bool context_add_element(context_t context, char * idf, void * data){
 
       //On stock la valeur du noeud precedent pour pouvoir la recuperer plus tard
       prec = noeud;
-      //On passe au noeuds suivant (le premier noeud ne contient pas d'attribu lettre)
+      //On passe au noeuds suivant (le premier noeud ne contient pas d'attribut lettre)
       noeud = noeud->suite_idf[indice];
       noeud->lettre = idf[0];
       noeud->data = NULL;
@@ -39,7 +39,7 @@ bool context_add_element(context_t context, char * idf, void * data){
   if(prec->idf_existant == true){
     return false;
   }
-  //Sinon on afficte data et termine le mot en mettant idf_existant a true
+  //Sinon on affecte data et termine le mot en mettant idf_existant a true
   else
   {
     prec->idf_existant = true;
