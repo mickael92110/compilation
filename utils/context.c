@@ -23,18 +23,19 @@ bool context_add_element(context_t context, char * idf, void * data){
       if(noeud->suite_idf[indice] == NULL)
       {
         noeud->suite_idf[indice] = calloc(1,sizeof(noeud_s));
+        noeud->suite_idf[indice]->lettre = idf[0];
+        noeud->suite_idf[indice]->data = NULL;
       }
 
       //On passe au noeuds suivant (le premier noeud ne contient pas d'attribu lettre)
       noeud = noeud->suite_idf[indice];
-      noeud->lettre = idf[0];
-      noeud->data = NULL;
       ++idf;
 
   }while(idf[0] != '\0');
 
   //Si le mot existe deja dans ce contexte alors on return false
   if(noeud->idf_existant == true){
+    printf("erreur IDF déja existant\n");
     return false;
   }
   //Sinon on afficte data et termine le mot en mettant idf_existant a true
@@ -116,4 +117,3 @@ int get_indice(char str){
     return 0;
   }
 }
-

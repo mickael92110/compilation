@@ -2,27 +2,35 @@
 #include "env.h"
 
 int main(void){
-  printf("Test main\n");
+  printf("================= Test context =================\n");
   context_t con = create_context();
   void * data;
   void * data2;
-  int val1 = 420;
-  int val2 = 69;
-  data = &val1;
-  data2 = &val2;
-  char * idf = "val1";
-  char * idf2 = "val2";
-  bool test = context_add_element(con,idf,data);
+  void *data3;
+  int val11 = 11;
+  int val22 = 22;
+  int val33 = 33;
+  data = &val11;
+  data2 = &val22;
+  data3 = &val33;
+  char * idf = "val11";
+  char * idf2 = "val22";
+  char * idf3 = "val22";
 
+  bool test = context_add_element(con,idf,data);
   printf("retour context_add_element test1 = %d\n", test);
   bool test2 = context_add_element(con,idf2,data2);
   printf("retour context_add_element test2 = %d\n", test2);
+  bool test3 = context_add_element(con,idf3,data3);
+  printf("retour context_add_element test3 = %d\n", test3);
 
-  int valeur1 = *((int*)get_data(con, idf));
-  printf("valeur1: %d\n", valeur1);
+  printf("Affichage des lettres et de la valeur du test1 \n");
+  int valeur11 = *((int*)get_data(con, idf));
+  printf("valeur1: %d\n", valeur11);
 
-  int valeur2 = *((int*)get_data(con, idf2));
-  printf("valeur2 : %d\n", valeur2);
+  printf("Affichage des lettres et de la valeur du test2 \n");
+  int valeur22 = *((int*)get_data(con, idf2));
+  printf("valeur2 : %d\n", valeur22);
 
   free_context(con);
 
@@ -107,16 +115,21 @@ push_context();
 char * ident = "test";
 char * ident2 = "test";
 void * node;
-int nice2 = 69;
-node = &nice2;
+void *node2;
+int val44 = 44;
+int val55 = 55;
+node = &val44;
+node2 = &val55;
 int32_t size = 4;
-env_add_element(ident, node, size);
-//env_add_element(ident2, node, size);
+int32_t test4 = env_add_element(ident, node, size);
+printf("retour context_add_element test3 = %d\n", test4);
+int32_t test5 = env_add_element(ident2, node2, size);
+printf("retour context_add_element test4 = %d\n", test5);
 
-int veryNice2 = *((int*)get_decl_node(ident));
-printf("very nice : %d\n", veryNice2);
+printf("Affichage des lettres et de la valeur du test4 \n");
+int valeur44 = *((int*)get_decl_node(ident));
+printf("valeur44: %d\n", valeur44);
 
 pop_context();
   return 0;
 }
-

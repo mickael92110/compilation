@@ -31,7 +31,6 @@ void pop_context(){
 // Ajouter fonctionnalite de regarder dans les autres contextes
 int32_t env_add_element(char * ident, void * node, int32_t size){
   bool add = context_add_element(env_courant->context, ident, node);
-  printf("Retour de add : %d\n", add);
   if(add){
     offset_courant += size;
     return size;
@@ -47,12 +46,14 @@ int32_t env_add_element(char * ident, void * node, int32_t size){
 }*/
 
 void * get_decl_node(char * ident) {
-  void * donnee;
+  void * donnee = NULL;
   env_t e = env_courant;
 //On suppose que l'identifiant existe dans au moins 1 contexte
 //Tant qu'on a pas trouvé l'identifiant donc tant que donnee == NULL
   do{
+
     donnee = get_data(e->context, ident);
+    //printf("valeur1: %d\n", *((int*)donnee));
     e = e->next;
     }while(donnee == NULL);
 
@@ -70,7 +71,8 @@ int32_t get_env_current_offset(){
 
 // ajouter a la fin du global context
 int32_t add_string(char * str){
-  return 0 ;
+
+  return 0;
 
 }
 int32_t get_global_strings_number(){
