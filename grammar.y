@@ -16,11 +16,13 @@
 
 
 /* Global variables */
+int print_flag = 0;
 /* A completer */
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 extern char * infile;
 extern char * outfile;
+
 
 /* prototypes */
 int yylex(void);
@@ -29,6 +31,9 @@ extern int yylineno;
 void yyerror(node_t * program_root, char * s);
 void analyse_tree(node_t root);
 node_t make_node(node_nature nature, int nops, ...);
+void print_node(node_t node);
+char * retrait_guillemet(char * c);
+void free_tree(node_t node);
 /* A completer */
 
 %}
@@ -339,7 +344,9 @@ listparamprint  : listparamprint TOK_COMMA paramprint
                   $$ = make_node(NODE_LIST,2, $1,$3);
                 }
                 | paramprint
-                { $$ = $1; }
+                {
+                  $$ = $1;
+                }
                 ;
 
 paramprint      : ident
@@ -379,7 +386,6 @@ node_t make_node(node_nature nature, int nops, ...) {
       case NODE_WHILE:
       case NODE_FOR:
       case NODE_DOWHILE:
-      case NODE_PRINT:
 
             n->opr = calloc(nops,sizeof(node_t));
 
@@ -403,6 +409,30 @@ node_t make_node(node_nature nature, int nops, ...) {
 
             break;
 
+      case NODE_PRINT:
+            n->opr = calloc(nops,sizeof(node_t));
+
+            n->nature = nature;
+            n->type = 0;
+            n->value = 0;
+            n->offset = 0;
+            n->global_decl = 0;
+            n->lineno = yylineno;
+            n->stack_size = 0;
+            n->nops = nops;
+            //n->opr = NULL;
+            n->decl_node = NULL;
+            n->ident = NULL;
+            n->str = NULL;
+            n->node_num = 0;
+
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+
+            break;
+
+
       case NODE_TYPE:
             n->nature = nature;
             n->type = va_arg(ap,node_type);
@@ -421,7 +451,7 @@ node_t make_node(node_nature nature, int nops, ...) {
 
       case NODE_IDENT:
 
-            n->ident = calloc(100,sizeof(char*));
+            n->ident = calloc(32,sizeof(char*));
 
             n->nature = nature;
             n->type = 0;
@@ -587,7 +617,53 @@ node_t make_node(node_nature nature, int nops, ...) {
     return n;
 }
 
+//Fonction qui parcourt l'arbre et print les noeuds NODE_STRINGVAL et NODE_IDENT
+void print_node(node_t node){
+  node_t * temp;
+  if(node == NULL) return;
 
+  if(node->opr == NULL){
+    if(node->nature == NODE_STRINGVAL && print_flag){
+      char * str = retrait_guillemet(node->str);
+      printf("%s",str);
+      free(str);
+    }
+
+    if(node->nature == NODE_IDENT && print_flag){
+      printf("%d",(int)node->value);
+    }
+    return;
+  }
+
+  temp = node->opr;
+
+  if(node->nature == NODE_PRINT){
+    print_flag = 1;
+  }
+
+  print_node(node->opr[0]);
+  for(int i = 1; i<node->nops; ++i){
+    ++node->opr;
+    print_node(node->opr[0]);
+  }
+
+  node->opr = temp;
+}
+
+
+char * retrait_guillemet(char * c){
+  char * str = calloc(32,sizeof(char));
+  int32_t i = 1;
+  while (true) {
+      str[i - 1] = c[i];
+      if (c[i] == '"') {
+          str[i - 1] = '\0';
+          break;
+      }
+      i += 1;
+  }
+  return str;
+}
 
 /* A completer */
 void analyse_tree(node_t root) {
@@ -600,10 +676,32 @@ void analyse_tree(node_t root) {
             dump_mips_program(outfile);
             free_program();
         }
+        print_node(root);
         free_global_strings();
     }
 }
 
+void free_tree(node_t node){
+  node_t * temp;
+  if(node == NULL) {
+    return;
+
+  }
+  if(node->opr == NULL){
+    free(node);
+    return;
+  }
+
+  temp = node->opr;
+
+  free_tree(node->opr[0]);
+  for(int i = 1; i<node->nops; ++i){
+    ++node->opr;
+    free_tree(node->opr[0]);
+  }
+  node->opr = temp;
+  free(node);
+}
 
 
 void yyerror(node_t * program_root, char * s) {

@@ -26,17 +26,18 @@ void parcours_arbre(node_t node){
     if(node->nature == NODE_IDENT){
       node->offset = env_add_element(node->ident,node,4);
       node->decl_node = get_decl_node(node->ident);
-      if(node->decl_node == NULL) printf("NULL\n");
-      printf("%s   ligne : %d  ident : %s\n",node_nature2string(node->nature), node->lineno, node->ident);
+      //printf("decl_node ident : %s\n", node->decl_node->ident);
+      //if(node->decl_node == NULL) //printf("NULL\n");
+      //printf("%s   ligne : %d  ident : %s\n",node_nature2string(node->nature), node->lineno, node->ident);
     }
-    //printf("feuille : %s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
+    ////printf("feuille : %s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
     return;
   }
 
   // Stockage dans temp
   temp = node->opr;
 
-  //printf("%s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
+  ////printf("%s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
 
   // Si on tombe sur un noeud DECLS alors on leve un flag pour donner le type
   // des declarations d'apres
@@ -45,16 +46,20 @@ void parcours_arbre(node_t node){
 
   if(node->nature == NODE_PROGRAM && node->opr[0] != NULL){
   //if(node->nature == NODE_PROGRAM){
-    printf("push_global_context()\n");
+    //printf("push_global_context()\n");
     push_global_context();
   }
 
   if(node->nature == NODE_BLOCK && node->opr[0] != NULL){
-    printf("push_context()\n");
-    printf("%s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
+    //printf("push_context()\n");
+    //printf("%s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
     push_context();
   }
 
+  if(node->nature == NODE_FUNC){
+    //printf("reset_env_current_offset()\n");
+    reset_env_current_offset();
+  }
 
   parcours_arbre(node->opr[0]);
 
@@ -71,14 +76,14 @@ void parcours_arbre(node_t node){
   node_affect_type(node);
 
   if(node->nature == NODE_BLOCK && node->opr[0] != NULL){
-    printf("pop_context()\n");
-    printf("%s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
+    //printf("pop_context()\n");
+    //printf("%s   ligne : %d\n",node_nature2string(node->nature), node->lineno);
     pop_context();
   }
 
   if(node->nature == NODE_PROGRAM && node->opr[0] != NULL){
   //if(node->nature == NODE_PROGRAM){
-    printf("pop_global_context()\n");
+    //printf("pop_global_context()\n");
     pop_context();
   }
 }

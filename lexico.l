@@ -12,6 +12,8 @@ void yyerror(char *);
 int yyparse(node_t * program_root);
 int fileno(FILE * stream);
 void analyse_tree(node_t root);
+void print_node(node_t node);
+void free_tree(node_t node);
 
 
 char * infile = NULL;
@@ -276,6 +278,7 @@ int main(int argc, char ** argv) {
     dump_tree(program_root,"arbre_syntaxe.dot");
     analyse_tree(program_root);
     dump_tree(program_root,"arbre_passe1.dot");
+    free_tree(program_root);
     yylex_destroy();
 
     return 0;
