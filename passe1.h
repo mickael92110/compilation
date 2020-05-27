@@ -12,7 +12,8 @@
 
 void passe1(node_t root);
 void parcours_arbre(node_t node);
-void node_decl_type(node_t node);
-void node_affect_type(node_t node);
+void condition_parcours(node_t node);
+void condition_feuille(node_t node);
+void condition_fin_arbre(node_t node);
 
 #endif

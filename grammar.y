@@ -34,7 +34,7 @@ node_t make_node(node_nature nature, int nops, ...);
 void print_node(node_t node);
 char * retrait_guillemet(char * c);
 void free_tree(node_t node);
-/* A completer */
+
 
 %}
 
@@ -93,7 +93,6 @@ program         : listdeclnonnull maindecl
                 {
 
                     $$ = make_node(NODE_PROGRAM, 2, NULL, $1);
-                    //$$ = make_node(NODE_PROGRAM, 1, $1);
                     *program_root = $$;
                 }
                 ;
@@ -163,7 +162,6 @@ maindecl        : type ident TOK_LPAR TOK_RPAR block
 listinst        : listinstnonnull
                 {
                   $$ = $1;
-                  //$$ = NULL;
                 }
                 |
                 {
@@ -367,105 +365,25 @@ ident           : TOK_IDENT
 /* A completer et/ou remplacer avec d'autres fonctions */
 node_t make_node(node_nature nature, int nops, ...) {
     va_list ap;
-
     va_start(ap, nops);
-
     node_t n;
-
     // On initialise la structure a retourner
-    n = malloc(sizeof(node_s));
-
+    n =calloc(1,sizeof(node_s));
 
     switch (nature){
-
-      case NODE_PROGRAM:
-      case NODE_BLOCK:
-      case NODE_DECLS:
-      case NODE_DECL:
-      case NODE_IF:
-      case NODE_WHILE:
-      case NODE_FOR:
-      case NODE_DOWHILE:
-
-            n->opr = calloc(nops,sizeof(node_t));
-
-            n->nature = nature;
-            n->type = 0;
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
-            n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = nops;
-            //n->opr = NULL;
-            n->decl_node = NULL;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
-
-            for(int i = 0; i < n->nops; ++i){
-              n->opr[i] = va_arg(ap, node_t);
-            }
-
-            break;
-
-      case NODE_PRINT:
-            n->opr = calloc(nops,sizeof(node_t));
-
-            n->nature = nature;
-            n->type = 0;
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
-            n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = nops;
-            //n->opr = NULL;
-            n->decl_node = NULL;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
-
-            for(int i = 0; i < n->nops; ++i){
-              n->opr[i] = va_arg(ap, node_t);
-            }
-
-            break;
-
 
       case NODE_TYPE:
             n->nature = nature;
             n->type = va_arg(ap,node_type);
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
             n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = 0;
-            n->opr = NULL;
-            n->decl_node = NULL;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
             break;
 
       case NODE_IDENT:
 
-            n->ident = calloc(32,sizeof(char*));
-
             n->nature = nature;
-            n->type = 0;
-            n->value = 0;
             n->offset = -1;
-            n->global_decl = 0;
             n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = 0;
-            n->opr = 0;
-            n->decl_node = 0;
             n->ident = va_arg(ap, char*);
-            n->str = NULL;
-            n->node_num = 0;
             break;
 
       case NODE_INTVAL:
@@ -473,145 +391,31 @@ node_t make_node(node_nature nature, int nops, ...) {
             n->nature = nature;
             n->type = TYPE_INT;
             n->value = va_arg(ap, int);
-            n->offset = 0;
-            n->global_decl = 0;
             n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = 0;
-            n->opr = 0;
-            n->decl_node = 0;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
             break;
 
       case NODE_BOOLVAL:
             n->nature = nature;
             n->type = TYPE_BOOL;
             n->value = va_arg(ap, int);
-            n->offset = 0;
-            n->global_decl = 0;
             n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = 0;
-            n->opr = 0;
-            n->decl_node = 0;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
             break;
-
-      case NODE_FUNC:
-            n->opr = calloc(nops,sizeof(node_t));
-
-            n->nature = nature;
-            n->type = 0;
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
-            n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = nops;
-            //n->opr = 0;
-            n->decl_node = 0;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
-
-            for(int i = 0; i < n->nops; ++i){
-              n->opr[i] = va_arg(ap, node_t);
-            }
-            break;
-
-
-      case NODE_LIST:
-
-            n->opr = calloc(nops,sizeof(node_t));
-
-            n->nature = nature;
-            n->type = 0;
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
-            n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = nops;
-            //n->opr = 0;
-            n->decl_node = 0;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
-
-            for(int i = 0; i < n->nops; ++i){
-              n->opr[i] = va_arg(ap, node_t);
-            }
-            break;
-
-      case NODE_PLUS:
-      case NODE_MINUS:
-      case NODE_MUL:
-      case NODE_DIV:
-      case NODE_MOD:
-      case NODE_LT:
-      case NODE_GT:
-      case NODE_LE:
-      case NODE_GE:
-      case NODE_EQ:
-      case NODE_NE:
-      case NODE_AND:
-      case NODE_OR:
-      case NODE_BAND:
-      case NODE_BOR:
-      case NODE_BXOR:
-      case NODE_SRA:
-      case NODE_SRL:
-      case NODE_SLL:
-      case NODE_NOT:
-      case NODE_BNOT:
-      case NODE_UMINUS:
-      case NODE_AFFECT:
-            n->opr = calloc(nops,sizeof(node_t));
-
-            n->nature = nature;
-            n->type = 0;
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
-            n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = nops;
-            //n->opr = 0;
-            n->decl_node = 0;
-            n->ident = NULL;
-            n->str = NULL;
-            n->node_num = 0;
-
-            for(int i = 0; i < n->nops; ++i){
-              n->opr[i] = va_arg(ap, node_t);
-            }
-            break;
-
 
       case NODE_STRINGVAL:
             n->nature = nature;
-            n->type = 0;
-            n->value = 0;
-            n->offset = 0;
-            n->global_decl = 0;
             n->lineno = yylineno;
-            n->stack_size = 0;
-            n->nops = 0;
-            n->opr = 0;
-            n->decl_node = 0;
-            n->ident = NULL;
             n->str = va_arg(ap, char*);
-            n->node_num = 0;
-
             break;
 
       default:
-          printf("%s   ligne : %d\n",node_nature2string(nature), yylineno);
-          break;
+            n->opr = calloc(nops,sizeof(node_t));
+            n->nature = nature;
+            n->lineno = yylineno;
+            n->nops = nops;
+            for(int i = 0; i < n->nops; ++i){
+              n->opr[i] = va_arg(ap, node_t);
+            }
+            break;
     }
     va_end(ap);
     return n;
@@ -684,10 +488,12 @@ void analyse_tree(node_t root) {
 void free_tree(node_t node){
   node_t * temp;
   if(node == NULL) {
+    free(node);
     return;
-
   }
   if(node->opr == NULL){
+    free(node->str);
+    free(node->ident);
     free(node);
     return;
   }
@@ -700,6 +506,8 @@ void free_tree(node_t node){
     free_tree(node->opr[0]);
   }
   node->opr = temp;
+
+  free(node->opr);
   free(node);
 }
 

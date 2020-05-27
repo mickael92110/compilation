@@ -20,8 +20,8 @@ char * infile = NULL;
 char * outfile = NULL;
 bool stop_after_syntax = false;
 bool stop_after_verif = false;
-int trace;
-int reg_max;
+int trace = 0;
+int reg_max = 8;
 /* A completer */
 
 #if YYDEBUG
@@ -212,12 +212,11 @@ ESPACE          [ \t\n]
 {IDF} {
                 yylval.strval = strdup(yytext);
                 //printf("TOK_IDF str = %s\n", yytext );
-                //printf("TOK_IDF\n");
                 return TOK_IDENT;
 }
 
 {ENTIER} {
-                /* A completer : affecter yylval.intval et faire des verifications */
+
                 yylval.intval =(int32_t)atoi(yytext);
                 //printf("TOK_INTVAL val = %d\n", atoi(yytext) );
                 return TOK_INTVAL;
@@ -226,7 +225,6 @@ ESPACE          [ \t\n]
 
 
 {CHAINE} {
-                /* A completer : affecter yylval.strval */
                 yylval.strval = strdup(yytext);
                 //printf("TOK_STRING str = %s\n", strdup(yytext) );
                 return TOK_STRING;
@@ -238,11 +236,6 @@ ESPACE          [ \t\n]
 
 [ \t\n]+
 
-
-{ENTIER}{CHAINE} {
-                fprintf(stderr, "Error line %d: Lexical error (entier)(chaine)\n", yylineno);
-                exit(1);
-}
 
 . {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
@@ -258,11 +251,6 @@ int yywrap(void) {
 
 
 int main(int argc, char ** argv) {
-    /* A completer */
-    if(argc == 1){
-      print_regles();
-      return 0;
-    }
 
     node_t program_root;
     parse_args(argc, argv);

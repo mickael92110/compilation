@@ -35,7 +35,6 @@ void print_regles(){
 }
 
 void parse_args(int argc, char ** argv) {
-    /* A corriger et completer */
   int s_flag = 0;
   int v_flag = 0;
 
@@ -109,19 +108,15 @@ void parse_args(int argc, char ** argv) {
         }
         break;
 
-      case 'h':
+      default:
         print_regles();
         exit(0);
-        break;
-
-      default:
         break;
       }
 
     for(index = optind; index < argc; index++){
         ++cpt;
     }
-
     if(cpt > 1){
       printf("\nErreur : trop d'arguments\n");
       print_regles();
