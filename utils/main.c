@@ -1,5 +1,6 @@
 #include "context.h"
 #include "env.h"
+#include <string.h>
 
 int main(void){
   printf("================= Test context =================\n");
@@ -26,11 +27,11 @@ int main(void){
 
   printf("Affichage des lettres et de la valeur du test1 \n");
   int valeur11 = *((int*)get_data(con, idf));
-  printf("valeur1: %d\n", valeur11);
+  printf("valeur11: %d\n", valeur11);
 
   printf("Affichage des lettres et de la valeur du test2 \n");
   int valeur22 = *((int*)get_data(con, idf2));
-  printf("valeur2 : %d\n", valeur22);
+  printf("valeur22 : %d\n", valeur22);
 
   free_context(con);
 
@@ -131,5 +132,20 @@ int valeur44 = *((int*)get_decl_node(ident));
 printf("valeur44: %d\n", valeur44);
 
 pop_context();
+
+printf("=================test env suite============\n");
+char * chaine = "hello";
+printf("nb chaines: %d\n", get_global_strings_number());
+
+int32_t t = add_string(chaine);
+printf("get_global_strings_number : %d\n", get_global_strings_number());
+printf("get_global_string %s\n", get_global_string(0));
+printf("offset data : %d\n", t);
+
+int32_t t2 = add_string("coucou");
+printf("get_global_strings_number: %d\n", get_global_strings_number());
+printf("get_global_string %s\n", get_global_string(1));
+printf("offset data : %d\n", t2);
+free_global_strings();
   return 0;
 }
